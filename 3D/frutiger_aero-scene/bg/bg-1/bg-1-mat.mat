@@ -105,7 +105,7 @@ Material:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Alpha_Scale: 0.8
+    - _Alpha_Scale: 0.59
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -121,7 +121,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _IOR: 1.5
+    - _IOR: 0.78
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
