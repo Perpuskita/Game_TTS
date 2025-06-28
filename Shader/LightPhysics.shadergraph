@@ -811,7 +811,7 @@
         "HLSL"
     ],
     "m_Precision": 0,
-    "m_PreviewExpanded": false,
+    "m_PreviewExpanded": true,
     "m_DismissedVersion": 0,
     "m_PreviewMode": 0,
     "m_CustomColors": {
@@ -2750,7 +2750,7 @@
     "m_Title": "Refraction (IOR) + Reflection",
     "m_Position": {
         "x": -1572.800048828125,
-        "y": 69.5999755859375
+        "y": 69.60000610351563
     }
 }
 

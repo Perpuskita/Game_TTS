@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Vera SDF Material
-  m_Shader: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
+  m_Shader: {fileID: 4800000, guid: e0fc081d5fffb104ea1e8894bf8a12cb, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -67,11 +67,21 @@ Material:
     - _LightAngle: 3.1416
     - _MaskSoftnessX: 0
     - _MaskSoftnessY: 0
+    - _OutlineBottom: 0
+    - _OutlineBottomLeft: 0
+    - _OutlineBottomRight: 0
+    - _OutlineLeft: 0
+    - _OutlineRight: 0
     - _OutlineSoftness: 0
+    - _OutlineThickness: 0.2
+    - _OutlineTop: 0
+    - _OutlineTopLeft: 0
+    - _OutlineTopRight: 0
     - _OutlineUVSpeedX: 0
     - _OutlineUVSpeedY: 0
     - _OutlineWidth: 0
     - _PerspectiveFilter: 0.875
+    - _PixelSize: 0.0031
     - _Reflectivity: 10
     - _ScaleRatioA: 0.85714287
     - _ScaleRatioB: 0.6964286
@@ -88,6 +98,7 @@ Material:
     - _StencilWriteMask: 255
     - _TextureHeight: 512
     - _TextureWidth: 512
+    - _Threshold: 0.458
     - _UnderlayDilate: 0
     - _UnderlayOffsetX: 0
     - _UnderlayOffsetY: 0
@@ -98,11 +109,12 @@ Material:
     - _WeightNormal: 0
     m_Colors:
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
     - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
     - _GlowColor: {r: 0, g: 1, b: 0, a: 0.5}
     - _MaskCoord: {r: 0, g: 0, b: 32767, a: 32767}
-    - _OutlineColor: {r: 0.4113207, g: 0.4113207, b: 0.4113207, a: 1}
+    - _OutlineColor: {r: 0.49202558, g: 0.9622642, b: 0.9327877, a: 1}
     - _ReflectFaceColor: {r: 0, g: 0, b: 0, a: 1}
     - _ReflectOutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
