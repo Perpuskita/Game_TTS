@@ -10,16 +10,15 @@ using Unity.Mathematics;
 public class zoom : MonoBehaviour
 {
     // const position untuk 
-    const float bg = -40;
-    const float ornament = -10;
-    const float grid = 0;
+    // const float bg = -40;
+    // const float ornament = -10;
 
     // Obj and Camera definition
 
     [Header("Object Definition")]
     [SerializeField] private Camera cam;
-    [SerializeField] private GameObject Background;
-    [SerializeField] private List<GameObject> Ornaments;
+    // [SerializeField] private GameObject Background;
+    // [SerializeField] private List<GameObject> Ornaments;
     [SerializeField] private List<GameObject> Grid_Obj;
 
     // Future update for fake smile concept
@@ -32,63 +31,18 @@ public class zoom : MonoBehaviour
     [SerializeField, Range(0, 3)] float gap;
 
     private Vector2 dimension;
+
     bool on_animate;
-
-
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
 
+        dimension = gameObject.GetComponent<Spawn_Grid>().Get_Dimensions_Reference();
         on_animate = false;
         // setting background
-        setting_background_position();
-
-        // dimensi untuk mesh renderer Grid Component
-        dimension = new Vector2(Grid_Obj[0].GetComponent<MeshRenderer>().bounds.size.x, Grid_Obj[0].GetComponent<MeshRenderer>().bounds.size.y);
-
-        // i untuk pos y
-        // j untuk pos x
-
-        for (int i = 0; i < grid_length; i++)
-        {
-            for (int j = 0; j < grid_length; j++)
-            {
-                // Debug.Log(j - grid_length / 2);
-                // Debug.Log(i);
-
-                spawn_grid(Grid_Obj[0], j - grid_length / 2, i);
-
-            }
-        }
-
+        // setting_background_position();
         StartCoroutine(highlight(45, 60));
-
-    }
-
-    void setting_background_position()
-    {
-        Background.transform.position = new Vector3(0, 0, bg);
-        foreach (GameObject item in Ornaments)
-        {
-            item.transform.position = new Vector3(item.transform.position.x,
-                                                    item.transform.position.y,
-                                                    ornament);
-        }
-    }
-
-    void spawn_grid(GameObject reference, int x, int y)
-    {
-        GameObject new_grid = Instantiate(reference);
-        new_grid.transform.SetParent(reference.transform.parent);
-        new_grid.transform.position = new Vector3(dimension.x * x + gap * x,
-                                                    dimension.y * y + gap * y,
-                                                    grid);
-
-    }
-    // Update is called once per frame
-    void Update()
-    {
 
     }
 
