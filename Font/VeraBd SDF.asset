@@ -2738,11 +2738,19 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: VeraBd SDF Material
-  m_Shader: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
+  m_Shader: {fileID: 4800000, guid: e0fc081d5fffb104ea1e8894bf8a12cb, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _OUTLINEBOTTOMLEFT_ON
+  - _OUTLINEBOTTOMRIGHT_ON
+  - _OUTLINEBOTTOM_ON
+  - _OUTLINELEFT_ON
+  - _OUTLINERIGHT_ON
+  - _OUTLINETOPLEFT_ON
+  - _OUTLINETOPRIGHT_ON
+  - _OUTLINETOP_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -2797,11 +2805,24 @@ Material:
     - _LightAngle: 3.1416
     - _MaskSoftnessX: 0
     - _MaskSoftnessY: 0
+    - _OutlineBottom: 1
+    - _OutlineBottomLeft: 1
+    - _OutlineBottomRight: 1
+    - _OutlineLeft: 1
+    - _OutlineRight: 1
+    - _OutlineScale: 1.1
     - _OutlineSoftness: 0
+    - _OutlineThickness: 0.01
+    - _OutlineTop: 1
+    - _OutlineTopLeft: 1
+    - _OutlineTopRight: 1
     - _OutlineUVSpeedX: 0
     - _OutlineUVSpeedY: 0
     - _OutlineWidth: 0
+    - _OutlineXOffset: 0
+    - _OutlineYOffset: 0
     - _PerspectiveFilter: 0.875
+    - _PixelSize: 0.001
     - _Reflectivity: 10
     - _ScaleRatioA: 0.85714287
     - _ScaleRatioB: 0.6964286
@@ -2818,6 +2839,7 @@ Material:
     - _StencilWriteMask: 255
     - _TextureHeight: 512
     - _TextureWidth: 512
+    - _Threshold: 0.587
     - _UnderlayDilate: 0
     - _UnderlayOffsetX: 0
     - _UnderlayOffsetY: 0
@@ -2828,6 +2850,7 @@ Material:
     - _WeightNormal: 0
     m_Colors:
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
     - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
     - _GlowColor: {r: 0, g: 1, b: 0, a: 0.5}

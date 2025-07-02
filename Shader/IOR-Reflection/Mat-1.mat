@@ -7,25 +7,18 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PixelatedFont
-  m_Shader: {fileID: 4800000, guid: e0fc081d5fffb104ea1e8894bf8a12cb, type: 3}
+  m_Name: Mat-1
+  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords:
-  - _OUTLINEBOTTOMLEFT_ON
-  - _OUTLINEBOTTOMRIGHT_ON
-  - _OUTLINEBOTTOM_ON
-  - _OUTLINELEFT_ON
-  - _OUTLINERIGHT_ON
-  - _OUTLINETOPLEFT_ON
-  - _OUTLINETOPRIGHT_ON
-  - _OUTLINETOP_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses:
   - MOTIONVECTORS
   m_LockedProperties: 
@@ -110,17 +103,7 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
-    - _OutlineBottom: 1
-    - _OutlineBottomLeft: 1
-    - _OutlineBottomRight: 1
-    - _OutlineLeft: 1
-    - _OutlineRight: 1
-    - _OutlineThickness: 0.01
-    - _OutlineTop: 1
-    - _OutlineTopLeft: 1
-    - _OutlineTopRight: 1
     - _Parallax: 0.005
-    - _PixelSize: 0.007
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Smoothness: 0.5
@@ -129,18 +112,16 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _Threshold: 0.5
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &1622915589066020629
+--- !u!114 &1757817833145026276
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

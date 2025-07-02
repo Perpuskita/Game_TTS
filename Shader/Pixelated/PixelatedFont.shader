@@ -17,7 +17,7 @@ Shader "Custom/PixelatedFont_HLSL"
         _PixelSize ("Pixel Scale", Range(0.001, 0.2)) = 0.01
 
         // _Threshold: Controls the alpha cut-off for the *inner* part of the font.
-        // Pixels with alpha below this value start becoming transparent or part of the outline.
+        // Pixels with alpha below this value start becoming transparent.
         _Threshold ("Sharpness Threshold", Range(0.0, 1.0)) = 0.5
 
         // _Color: A tint color for the font, useful for changing font color directly
@@ -27,20 +27,17 @@ Shader "Custom/PixelatedFont_HLSL"
         // _OutlineColor: Color of the pixelated outline.
         _OutlineColor ("Outline Color", Color) = (0,0,0,1) // Default to black, fully opaque
 
-        // _OutlineThickness: Controls the width of the outline.
-        // This value defines the 'distance' from the character's solid form
-        // where the outline will appear. A larger value means a thicker outline.
-        _OutlineThickness ("Outline Thickness", Range(0.0, 0.2)) = 0.01 // Increased max range
+        // _OutlineXOffset: Controls the horizontal offset of the outline layer in UV space.
+        // Positive values shift the outline right, negative left.
+        _OutlineXOffset ("Outline X Offset", Range(-0.1, 0.1)) = 0.0
 
-        // Toggles for showing outline on specific sides. 0 = off, 1 = on.
-        [Toggle] _OutlineLeft ("Show Left Outline", Float) = 1
-        [Toggle] _OutlineRight ("Show Right Outline", Float) = 1
-        [Toggle] _OutlineTop ("Show Top Outline", Float) = 1
-        [Toggle] _OutlineBottom ("Show Bottom Outline", Float) = 1
-        [Toggle] _OutlineTopLeft ("Show Top-Left Outline", Float) = 1
-        [Toggle] _OutlineTopRight ("Show Top-Right Outline", Float) = 1
-        [Toggle] _OutlineBottomLeft ("Show Bottom-Left Outline", Float) = 1
-        [Toggle] _OutlineBottomRight ("Show Bottom-Right Outline", Float) = 1
+        // _OutlineYOffset: Controls the vertical offset of the outline layer in UV space.
+        // Positive values shift the outline up, negative down.
+        _OutlineYOffset ("Outline Y Offset", Range(-0.1, 0.1)) = 0.0
+
+        // _OutlineScale: Controls the overall size of the outline layer relative to the main text.
+        // Values > 1.0 expand the outline, < 1.0 shrink it.
+        _OutlineScale ("Outline Scale", Range(0.5, 1.5)) = 1.1
     }
     SubShader
     {
@@ -103,16 +100,9 @@ Shader "Custom/PixelatedFont_HLSL"
                 float _Threshold;
                 float4 _Color; // Main text color
                 float4 _OutlineColor; // Outline color
-                float _OutlineThickness; // Outline thickness
-                // Outline side toggles (0 = off, 1 = on)
-                float _OutlineLeft;
-                float _OutlineRight;
-                float _OutlineTop;
-                float _OutlineBottom;
-                float _OutlineTopLeft;
-                float _OutlineTopRight;
-                float _OutlineBottomLeft;
-                float _OutlineBottomRight;
+                float _OutlineXOffset; // X offset for outline layer
+                float _OutlineYOffset; // Y offset for outline layer
+                float _OutlineScale; // Scale for outline layer
             CBUFFER_END
 
             // Vertex Shader: Transforms vertex data for the fragment shader.
@@ -126,96 +116,48 @@ Shader "Custom/PixelatedFont_HLSL"
                 return output;
             }
 
-            // Fragment Shader: Determines the final color of each pixel, including outline.
+            // Fragment Shader: Determines the final color of each pixel, implementing layered outline.
             half4 Frag(Varyings input) : SV_Target
             {
-                // Step 1: Calculate the pixelated UV coordinate for the current pixel.
+                // Step 1: Calculate the pixelated UV coordinate for the current fragment for the main text.
                 float2 pixelatedUv = floor(input.uv / _PixelSize) * _PixelSize + 0.5 * _PixelSize;
 
-                // Step 2: Sample the main texture (font atlas) at the pixelated UV coordinate
-                // to get the alpha value of the current pixel.
-                half currentAlpha = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, pixelatedUv).a;
+                // Step 2: Sample the alpha for the main text layer.
+                half mainAlpha = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, pixelatedUv).a;
+                mainAlpha *= input.color.a * _Color.a; // Apply vertex and material color alphas
 
-                // Combine with vertex color alpha and material color alpha for overall character presence.
-                currentAlpha *= input.color.a * _Color.a;
+                // Step 3: Calculate the UV for sampling the outline layer.
+                // Apply scaling around the center (0.5, 0.5) first.
+                float2 baseOutlineUv = (input.uv - 0.5) * _OutlineScale + 0.5;
+                // Then apply the manual offset for outline position.
+                baseOutlineUv += float2(_OutlineXOffset, _OutlineYOffset);
+                // Finally, apply pixelation to this transformed UV.
+                float2 outlineOffsetUv = floor(baseOutlineUv / _PixelSize) * _PixelSize + 0.5 * _PixelSize;
+
+                // Step 4: Sample the alpha for the outline layer.
+                half outlineAlpha = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, outlineOffsetUv).a;
+                outlineAlpha *= input.color.a * _OutlineColor.a; // Use outline color's alpha for its visibility
 
                 half4 finalColor = 0; // Initialize final color
 
-                // Define the threshold for the outer edge of the outline.
-                half outlineThreshold = _Threshold - _OutlineThickness;
-
-                // Step 3: Determine if the pixel is part of the main text, outline, or fully transparent.
-
-                // If current pixel's alpha is above the main threshold, it's the solid text.
-                if (currentAlpha >= _Threshold)
+                // Step 5: Prioritize drawing the main text, then the outline, otherwise discard.
+                // If the main text pixel is above the threshold, draw it.
+                if (mainAlpha >= _Threshold)
                 {
                     finalColor.rgb = input.color.rgb * _Color.rgb; // Apply main text color
-                    finalColor.a = 1.0; // Fully opaque
+                    finalColor.a = 1.0; // Ensure it's fully opaque
                 }
-                // Else, check for outline conditions.
-                else if (currentAlpha >= outlineThreshold) // Current pixel is within the outline range
+                // Else, if the outline pixel is above the threshold (and main text isn't present), draw the outline.
+                else if (outlineAlpha >= _Threshold)
                 {
-                    bool isOutline = false;
-
-                    // Sample neighboring pixels to detect edges for directional outline
-                    // These offsets are based on the _PixelSize to ensure they align with the pixel grid
-                    float2 uv_left          = pixelatedUv + float2(-_PixelSize, 0.0);
-                    float2 uv_right         = pixelatedUv + float2(_PixelSize, 0.0);
-                    float2 uv_bottom        = pixelatedUv + float2(0.0, -_PixelSize);
-                    float2 uv_top           = pixelatedUv + float2(0.0, _PixelSize);
-                    float2 uv_top_left      = pixelatedUv + float2(-_PixelSize, _PixelSize);
-                    float2 uv_top_right     = pixelatedUv + float2(_PixelSize, _PixelSize);
-                    float2 uv_bottom_left   = pixelatedUv + float2(-_PixelSize, -_PixelSize);
-                    float2 uv_bottom_right  = pixelatedUv + float2(_PixelSize, -_PixelSize);
-
-                    // Sample alpha for neighbors (ensuring to apply vertex and material alpha factors)
-                    half alpha_left         = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv_left).a * input.color.a * _Color.a;
-                    half alpha_right        = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv_right).a * input.color.a * _Color.a;
-                    half alpha_bottom       = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv_bottom).a * input.color.a * _Color.a;
-                    half alpha_top          = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv_top).a * input.color.a * _Color.a;
-                    half alpha_top_left     = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv_top_left).a * input.color.a * _Color.a;
-                    half alpha_top_right    = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv_top_right).a * input.color.a * _Color.a;
-                    half alpha_bottom_left  = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv_bottom_left).a * input.color.a * _Color.a;
-                    half alpha_bottom_right = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv_bottom_right).a * input.color.a * _Color.a;
-
-                    // Check if current pixel is outline AND an edge exists on the enabled side
-                    // An edge exists if the neighbor in that direction is *outside* the outline threshold (i.e., transparent).
-                    if (_OutlineLeft > 0.5 && alpha_left < outlineThreshold) {
-                        isOutline = true;
-                    }
-                    if (_OutlineRight > 0.5 && alpha_right < outlineThreshold) {
-                        isOutline = true;
-                    }
-                    if (_OutlineBottom > 0.5 && alpha_bottom < outlineThreshold) {
-                        isOutline = true;
-                    }
-                    if (_OutlineTop > 0.5 && alpha_top < outlineThreshold) {
-                        isOutline = true;
-                    }
-                    if (_OutlineTopLeft > 0.5 && alpha_top_left < outlineThreshold) {
-                        isOutline = true;
-                    }
-                    if (_OutlineTopRight > 0.5 && alpha_top_right < outlineThreshold) {
-                        isOutline = true;
-                    }
-                    if (_OutlineBottomLeft > 0.5 && alpha_bottom_left < outlineThreshold) {
-                        isOutline = true;
-                    }
-                    if (_OutlineBottomRight > 0.5 && alpha_bottom_right < outlineThreshold) {
-                        isOutline = true;
-                    }
-
-                    if (isOutline) {
-                        finalColor.rgb = _OutlineColor.rgb; // Apply outline color
-                        finalColor.a = 1.0; // Fully opaque
-                    } else {
-                        discard; // If it's in the outline range but no selected edge, discard
-                    }
+                    finalColor.rgb = _OutlineColor.rgb; // Apply outline color
+                    finalColor.a = 1.0; // Ensure it's fully opaque
                 }
-                // Otherwise, the pixel is outside both the text and the outline, so discard it.
+                // Otherwise, the pixel is neither main text nor outline, so discard it.
                 else
                 {
                     discard; // Instructs the GPU to not render this pixel.
+                    return 0; // Return dummy value, as discard will prevent it from being used
                 }
 
                 return finalColor;
