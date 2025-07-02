@@ -8,10 +8,10 @@ using UnityEngine;
 
 public class Data_Deret : MonoBehaviour
 {
-    private string kata;
-    private bool direction;
-    private int x;
-    private int y;
+    private string kata;    // String berisi kata yang digunakan dalam TTS
+    private bool direction; // True untuk mendatar dan False untuk menurun
+    private int x;          // Koordinat x dari data
+    private int y;          // Koordinat y dari data
 
     public Data_Deret(string kata, bool direction, int x, int y)
     {
@@ -21,7 +21,7 @@ public class Data_Deret : MonoBehaviour
         this.y = y;
     }
 
-    public string Get()
+    public string Get_String()
     {
         return kata;
     }
@@ -31,29 +31,13 @@ public class Data_Deret : MonoBehaviour
         return kata.Length;
     }
 
-    public List<Vector2> Get_Render()
+    public Vector2 Get_Render()
     {
-        List<Vector2> Temp = new List<Vector2>();
-        if (direction)
-        {
-            for (int i = 0; i < String_Length(); i++)
-            {
-                
-            }
-
-            return Temp;
-        }
-        else
-        {
-            for (int i = 0; i < String_Length(); i++)
-            {
-
-            }
-
-            return Temp;
-        }
+        
+        return new Vector2(x,y);
         
     }
+
     public bool Get_Direction()
     {
         return direction;

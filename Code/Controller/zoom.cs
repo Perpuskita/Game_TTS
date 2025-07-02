@@ -24,21 +24,11 @@ public class zoom : MonoBehaviour
     // Future update for fake smile concept
     [SerializeField] private GameObject Selected_Overlay;
 
-
-    [Header("Grid Configuration")]
-    [SerializeField, Range(1, 10)] int grid_length;
-    [SerializeField, Range(1, 10)] int grid_height;
-    [SerializeField, Range(0, 3)] float gap;
-
-    private Vector2 dimension;
-
     bool on_animate;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
-        dimension = gameObject.GetComponent<Spawn_Grid>().Get_Dimensions_Reference();
         on_animate = false;
         // setting background
         // setting_background_position();
@@ -61,8 +51,6 @@ public class zoom : MonoBehaviour
         // Debug.Log(ctx.ReadValue<Vector2>());
         // Debug.Log(ctx.phase);
 
-        
-
         if (!on_animate && ctx.phase == InputActionPhase.Started)
         {
             if (cam.orthographicSize == 60)
@@ -82,6 +70,10 @@ public class zoom : MonoBehaviour
 
     IEnumerator overlay( Vector3 coordinate, int mendatar = 1, int menurun = 1 )
     {
+        Vector2 dimension = gameObject.GetComponent<Spawn_Grid>().Get_Dimensions_Reference();
+        float gap = gameObject.GetComponent<Spawn_Grid>().Get_Gap();
+
+
         Selected_Overlay.transform.position     = new Vector3(  math.floor((coordinate.x + dimension.x / 2) / dimension.x ) * ( dimension.x + gap),
                                                                 math.floor((coordinate.y + dimension.y / 2) / dimension.y ) * ( dimension.y + gap),
                                                                 -5);
