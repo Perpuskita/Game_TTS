@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
@@ -29,23 +30,26 @@ public class Spawn_Grid : MonoBehaviour
         Grid_Obj = new List<GameObject>();
         UI = gameObject.GetComponent<UI_Handler>();
 
-        dimension = new Vector2(Grid_Reference.GetComponent<MeshRenderer>().bounds.size.x, Grid_Reference.GetComponent<MeshRenderer>().bounds.size.y);
+        dimension = new Vector2(Grid_Reference.GetComponent<MeshRenderer>().bounds.size.x,
+                                Grid_Reference.GetComponent<MeshRenderer>().bounds.size.y);
 
-        for (int i = 0; i < grid_length; i++)
+        for (int i = grid_height; i > 0; i--)
         {
-            for (int j = 0; j < grid_length; j++)
+            for (int j = grid_length ; j > 0; j--)
             {
-                // Debug.Log(j - grid_length / 2);
-                // Debug.Log(i);
-
-                spawn_grid(Grid_Reference, j - grid_length / 2, i);
+                //Debug.Log(j - grid_length / 2);
+                spawn_grid(Grid_Reference, j - grid_length / 2 -1, i - 1);
 
             }
         }
 
-        set_activate_grid(UI.activate());
+        set_activate_grid(UI.activate(grid_length,grid_height));
          
+    }
 
+    public Vector2 Get_Dimension_Grid()
+    {
+        return new Vector2(grid_length, grid_height);
     }
 
     public float Get_Gap()
@@ -84,20 +88,12 @@ public class Spawn_Grid : MonoBehaviour
     {   
         GameObject new_grid = Instantiate(reference);
         new_grid.transform.SetParent(reference.transform.parent);
-        new_grid.transform.position = new Vector3(dimension.x * x + gap * x,
+        new_grid.transform.position = new Vector3(  dimension.x * x + gap * x,
                                                     dimension.y * y + gap * y,
                                                     grid_position);
         new_grid.SetActive(false);
         Grid_Obj.Add(new_grid);
 
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-    
-
 
 }

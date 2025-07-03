@@ -44,7 +44,7 @@ public class zoom : MonoBehaviour
 
         if (ctx.phase == InputActionPhase.Started)
         {
-            Debug.Log("World Position: " + worldPosition);
+            //Debug.Log("World Position: " + worldPosition);
 
         }
 
@@ -53,27 +53,68 @@ public class zoom : MonoBehaviour
 
         if (!on_animate && ctx.phase == InputActionPhase.Started)
         {
-            if (cam.orthographicSize == 60)
+            if (check_data(worldPosition))
             {
-                StartCoroutine(highlight(60, 45));
-                StartCoroutine(overlay(worldPosition, mendatar : 1));
+                if (cam.orthographicSize == 60)
+                {
+                    StartCoroutine(highlight(60, 45));
+                    StartCoroutine(overlay(worldPosition, mendatar: 1));
+                }
+                else
+                {
+                    StartCoroutine(overlay());
+                    StartCoroutine(highlight(45, 60));
+                }
             }
-            else
-            {
-                StartCoroutine(overlay());
-                StartCoroutine(highlight(45, 60));
-            }
+            
+            
         }
+    }
+
+    bool check_data(Vector3 coordinate)
+    {
+        Vector2 dimension = gameObject.GetComponent<Spawn_Grid>().Get_Dimensions_Reference();
+        int width = (int) gameObject.GetComponent<Spawn_Grid>().Get_Dimension_Grid().x;
+        int height = (int) gameObject.GetComponent<Spawn_Grid>().Get_Dimension_Grid().y;
+
+        // Debug.Log(math.floor((coordinate.x + dimension.x / 2) / dimension.x ));
+        // Debug.Log(math.floor((coordinate.y + dimension.y / 2) / dimension.y ));
+
+        int x = (int)math.floor((coordinate.x + dimension.x / 2) / dimension.x);
+        int y = (int)math.floor((coordinate.y + dimension.y / 2) / dimension.y);
+
+        // Debug.Log( math.abs(x - width) - ( width - width/2));
+        int newX = math.abs(x - width) - (width - width / 2);
+        int newY = math.abs(y - height) - 1;
+
+        if (width % 2 == 0)
+        {
+            newX -= 1;
+        }
+
+        Data data = gameObject.GetComponent<Data>();
+
+        // Data Search
+        
+        data.Searching_Grid(new Vector2(newX, newY));
+
+        // Debug.Log(newX);
+        // Debug.Log(newY);
+
+        return true;
     }
 
     // Future update for fake smile concept
 
     IEnumerator overlay( Vector3 coordinate, int mendatar = 1, int menurun = 1 )
     {
+        
         Vector2 dimension = gameObject.GetComponent<Spawn_Grid>().Get_Dimensions_Reference();
         float gap = gameObject.GetComponent<Spawn_Grid>().Get_Gap();
 
-
+        // Debug.Log(math.floor((coordinate.x + dimension.x / 2) / dimension.x ));
+        // Debug.Log(math.floor((coordinate.y + dimension.y / 2) / dimension.y ));      
+        
         Selected_Overlay.transform.position     = new Vector3(  math.floor((coordinate.x + dimension.x / 2) / dimension.x ) * ( dimension.x + gap),
                                                                 math.floor((coordinate.y + dimension.y / 2) / dimension.y ) * ( dimension.y + gap),
                                                                 -5);

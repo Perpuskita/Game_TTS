@@ -23,10 +23,11 @@ public class Data : MonoBehaviour
         return new List<Data_Deret> { x1, y1, x2 };
     }
 
-    public List<bool> Maps_Render(int height, int length)
+    public List<bool> Maps_Render(int length, int height)
     {
         List<bool> temp = Enumerable.Repeat(false, height * length).ToList();
 
+        // Debug.Log(length);
         // Debug.Log(datas.Count);
 
         foreach (Data_Deret item in datas)
@@ -47,9 +48,9 @@ public class Data : MonoBehaviour
             {
                 for (int i = 0; i < item.String_Length(); i++)
                 {
-                    // Debug.Log((int)Coordinate.x + length * ( i + (int)Coordinate.y ));
-                    temp[(int)Coordinate.x + length * ( i + (int)Coordinate.y )] = true;
-                }   
+                    //Debug.Log((int)Coordinate.x + length * (i + (int)Coordinate.y));
+                    temp[(int)Coordinate.x + length * (i + (int)Coordinate.y)] = true;
+                }
             }
         }
 
@@ -64,8 +65,26 @@ public class Data : MonoBehaviour
 
     public bool Searching_Data(string kata, int x, int y)
     {
-
         return false;
+    }
+
+    public List<Vector2> Searching_Grid( Vector2 coordinate)
+    {
+        List<Vector2> temp = new List<Vector2>();
+        // Debug.Log(coordinate);
+
+        foreach (Data_Deret item in datas)
+        {
+            List<Vector2> cek = item.Get_Render(coordinate);
+
+            if (cek != null)
+            {
+                Debug.Log(item.Get_String());
+                break;
+            }
+        }
+
+        return null;
     }
 
     public Data_Deret GetData_by_index(int index)

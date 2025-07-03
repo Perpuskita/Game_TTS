@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,9 +14,16 @@ public class UI_Handler : MonoBehaviour
         data = gameObject.AddComponent<Data>();
     }
 
-    public List<bool> activate()
+    public List<bool> activate(int x, int y)
     {
-        return data.Maps_Render(3, 3);
+        // Debug.Log(x);
+        // Debug.Log(y);
+        return data.Maps_Render(x, y);
+    }
+
+    public List<string> activate(int x, int y, string a)
+    {
+        return new List<string>();
     }
 
 }
