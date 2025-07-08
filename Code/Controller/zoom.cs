@@ -25,13 +25,16 @@ public class zoom : MonoBehaviour
     [SerializeField] private GameObject Selected_Overlay;
 
     bool on_animate;
+    Spawn_Grid UI_Spawn;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         on_animate = false;
+        UI_Spawn = gameObject.GetComponent<Spawn_Grid>();
         // setting background
         // setting_background_position();
+
         StartCoroutine(highlight(45, 60));
 
     }
@@ -53,16 +56,25 @@ public class zoom : MonoBehaviour
 
         if (!on_animate && ctx.phase == InputActionPhase.Started)
         {
-            if (check_data(worldPosition))
+            List<Vector2> task = check_data(worldPosition);
+
+            if (task != null)
             {
+
                 if (cam.orthographicSize == 60)
                 {
                     StartCoroutine(highlight(60, 45));
-                    StartCoroutine(overlay(worldPosition, mendatar: 1));
+                    foreach (Vector2 item in task)
+                    {
+                        StartCoroutine(UI_Spawn.set_activate_overlay(item));
+                    }
+
+                    // StartCoroutine(UI_Spawn.set_activate_overlay(task[0]));
                 }
+
                 else
                 {
-                    StartCoroutine(overlay());
+                    StartCoroutine(UI_Spawn.set_activate_overlay());
                     StartCoroutine(highlight(45, 60));
                 }
             }
@@ -71,7 +83,7 @@ public class zoom : MonoBehaviour
         }
     }
 
-    bool check_data(Vector3 coordinate)
+    List<Vector2> check_data(Vector3 coordinate)
     {
         Vector2 dimension = gameObject.GetComponent<Spawn_Grid>().Get_Dimensions_Reference();
         int width = (int) gameObject.GetComponent<Spawn_Grid>().Get_Dimension_Grid().x;
@@ -95,41 +107,44 @@ public class zoom : MonoBehaviour
         Data data = gameObject.GetComponent<Data>();
 
         // Data Search
-        
-        data.Searching_Grid(new Vector2(newX, newY));
-
         // Debug.Log(newX);
         // Debug.Log(newY);
 
-        return true;
+        return data.Searching_Grid(new Vector2(newX, newY));
     }
 
     // Future update for fake smile concept
 
-    IEnumerator overlay( Vector3 coordinate, int mendatar = 1, int menurun = 1 )
-    {
+    // IEnumerator overlay( Vector3 coordinate, int mendatar = 1, int menurun = 1 )
+    // {
+    //     Vector2 dimension = gameObject.GetComponent<Spawn_Grid>().Get_Dimensions_Reference();
+    //     float gap = gameObject.GetComponent<Spawn_Grid>().Get_Gap();
+
+    //     // j - grid_length / 2 -1, i - 1
+    //     // Debug.Log(math.floor((coordinate.x + dimension.x / 2) / dimension.x ));
+    //     // Debug.Log(math.floor((coordinate.y + dimension.y / 2) / dimension.y ));
+
+    //     GameObject new_grid = Instantiate(Selected_Overlay);
+    //     new_grid.transform.SetParent(Selected_Overlay.transform.parent);
+    //     new_grid.transform.position = new Vector3(  dimension.x * coordinate.x + gap * coordinate.x,
+    //                                                 dimension.y * coordinate.x + gap * coordinate.y,
+    //                                                 Selected_Overlay.transform.position.x);
         
-        Vector2 dimension = gameObject.GetComponent<Spawn_Grid>().Get_Dimensions_Reference();
-        float gap = gameObject.GetComponent<Spawn_Grid>().Get_Gap();
+    //     // Selected_Overlay.transform.position     = new Vector3(  math.floor((coordinate.x + dimension.x / 2) / dimension.x ) * ( dimension.x + gap),
+    //     //                                                         math.floor((coordinate.y + dimension.y / 2) / dimension.y ) * ( dimension.y + gap),
+    //     //                                                         -5);
 
-        // Debug.Log(math.floor((coordinate.x + dimension.x / 2) / dimension.x ));
-        // Debug.Log(math.floor((coordinate.y + dimension.y / 2) / dimension.y ));      
-        
-        Selected_Overlay.transform.position     = new Vector3(  math.floor((coordinate.x + dimension.x / 2) / dimension.x ) * ( dimension.x + gap),
-                                                                math.floor((coordinate.y + dimension.y / 2) / dimension.y ) * ( dimension.y + gap),
-                                                                -5);
+    //     new_grid.transform.localScale   = new Vector3(  dimension.x* mendatar + gap* mendatar,
+    //                                                     dimension.y* menurun + gap* menurun,
+    //                                                     1);
+    //     yield return null; 
+    // }
 
-        Selected_Overlay.transform.localScale   = new Vector3(  dimension.x* mendatar + gap* mendatar,
-                                                                dimension.y* menurun + gap* menurun,
-                                                                1);
-        yield return null; 
-    }
-
-    IEnumerator overlay()
-    {
-        Selected_Overlay.transform.localScale = Vector3.zero;
-        yield return null;
-    }
+    // IEnumerator overlay()
+    // {
+    //     Selected_Overlay.transform.localScale = Vector3.zero;
+    //     yield return null;
+    // }
 
     IEnumerator highlight(float startSize, float endSize, float duration = 0.5f)
     {

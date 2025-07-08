@@ -38,7 +38,7 @@ public class Data : MonoBehaviour
             {
                 for (int i = 0; i < item.String_Length(); i++)
                 {
-                    // Debug.Log(temp[(int)Coordinate.x + i + (int)Coordinate.y * length] = true);
+                    //Debug.Log(temp[(int)Coordinate.x + i + (int)Coordinate.y * length]);
                     temp[(int)Coordinate.x + i + (int)Coordinate.y * length] = true;
                 }
 
@@ -70,7 +70,7 @@ public class Data : MonoBehaviour
 
     public List<Vector2> Searching_Grid( Vector2 coordinate)
     {
-        List<Vector2> temp = new List<Vector2>();
+        List<Vector2> temp = null;
         // Debug.Log(coordinate);
 
         foreach (Data_Deret item in datas)
@@ -79,12 +79,28 @@ public class Data : MonoBehaviour
 
             if (cek != null)
             {
-                Debug.Log(item.Get_String());
-                break;
+                temp = cek;
+
+                if (item.Get_Direction())
+                {
+                    // Debug.Log("Mendatar + break : " + item.Get_String());
+                    break;
+                }
+                // else
+                // {
+                //     Debug.Log("Menurun + no break : " + item.Get_String());
+                // }
             }
         }
 
-        return null;
+        if (temp != null)
+        {
+            return temp;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public Data_Deret GetData_by_index(int index)

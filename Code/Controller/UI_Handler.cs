@@ -27,3 +27,7 @@ public class UI_Handler : MonoBehaviour
     }
 
 }
+
+
+// generate populasi pertama
+// populasi
