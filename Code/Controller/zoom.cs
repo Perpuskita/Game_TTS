@@ -24,6 +24,9 @@ public class zoom : MonoBehaviour
     // Future update for fake smile concept
     [SerializeField] private GameObject Selected_Overlay;
 
+    private float zoom_in =  720;
+    private float zoom_out = 1080;
+
     bool on_animate;
     Spawn_Grid UI_Spawn;
 
@@ -35,7 +38,7 @@ public class zoom : MonoBehaviour
         // setting background
         // setting_background_position();
 
-        StartCoroutine(highlight(45, 60));
+        StartCoroutine(highlight(720, 1080));
 
     }
 
@@ -61,9 +64,9 @@ public class zoom : MonoBehaviour
             if (task != null)
             {
 
-                if (cam.orthographicSize == 60)
+                if (cam.orthographicSize == 1080)
                 {
-                    StartCoroutine(highlight(60, 45));
+                    StartCoroutine(highlight(1080, 720));
                     foreach (Vector2 item in task)
                     {
                         StartCoroutine(UI_Spawn.set_activate_overlay(item));
@@ -75,7 +78,7 @@ public class zoom : MonoBehaviour
                 else
                 {
                     StartCoroutine(UI_Spawn.set_activate_overlay());
-                    StartCoroutine(highlight(45, 60));
+                    StartCoroutine(highlight(720, 1080));
                 }
             }
             

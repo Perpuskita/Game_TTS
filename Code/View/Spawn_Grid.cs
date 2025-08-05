@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class Spawn_Grid : MonoBehaviour
 {
-
     // Konfigurasi grid
 
     [Header("Grid Configuration")]

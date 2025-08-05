@@ -43,6 +43,8 @@ public class FPS_Counter : MonoBehaviour
 
     void Update()
     {
+
+        Application.targetFrameRate = 90;
         // Decrement timeleft by the time elapsed since the last frame
         timeleft -= Time.deltaTime;
         // Increment frame count
