@@ -25,13 +25,14 @@ public class Spawn_Grid : MonoBehaviour
     private UI_Handler UI;
 
 
-    // Dimensi dari OBJ yang belum digenerate
+    // Dimensi dari Game Obj Grid  yang belum digenerate
     private Vector2 dimension;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+
         Grid_Obj = new List<GameObject>();
         UI = gameObject.GetComponent<UI_Handler>();
         Overlay_Container = new List<GameObject>();
@@ -39,16 +40,19 @@ public class Spawn_Grid : MonoBehaviour
         dimension = new Vector2(Grid_Reference.GetComponent<MeshRenderer>().bounds.size.x,
                                 Grid_Reference.GetComponent<MeshRenderer>().bounds.size.y);
 
+        // Loop untuk spawn grid pertama
+
         for (int i = grid_height; i > 0; i--)
         {
-            for (int j = grid_length ; j > 0; j--)
+            for (int j = grid_length; j > 0; j--)
             {
                 // Debug.Log(j - grid_length / 2 + " " + i);
-                spawn_grid(Grid_Reference, j - grid_length / 2 -1, i - 1);
+                spawn_grid(Grid_Reference, j - grid_length / 2 - 1, i - 1);
 
             }
         }
 
+        // Set active Grid Setelah inisialisasi spawn pertama
         set_activate_grid(UI.activate(grid_length,grid_height));
          
     }

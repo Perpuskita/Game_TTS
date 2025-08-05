@@ -17,15 +17,16 @@ public class zoom : MonoBehaviour
 
     [Header("Object Definition")]
     [SerializeField] private Camera cam;
+    [SerializeField] private GameObject TextCanvas;
     // [SerializeField] private GameObject Background;
     // [SerializeField] private List<GameObject> Ornaments;
-    [SerializeField] private List<GameObject> Grid_Obj;
+    // [SerializeField] private List<GameObject> Grid_Obj;
 
     // Future update for fake smile concept
     [SerializeField] private GameObject Selected_Overlay;
 
-    private float zoom_in =  720;
-    private float zoom_out = 1080;
+    const float zoom_in =  720;
+    const float zoom_out = 1080;
 
     bool on_animate;
     Spawn_Grid UI_Spawn;
@@ -38,8 +39,13 @@ public class zoom : MonoBehaviour
         // setting background
         // setting_background_position();
 
-        StartCoroutine(highlight(720, 1080));
+        StartCoroutine(highlight(zoom_in, zoom_out));
 
+    }
+
+    private void tooggle_text_input( bool status )
+    {
+        TextCanvas.SetActive(status);        
     }
 
     public void Onklick(InputAction.CallbackContext ctx)
@@ -64,9 +70,9 @@ public class zoom : MonoBehaviour
             if (task != null)
             {
 
-                if (cam.orthographicSize == 1080)
+                if (cam.orthographicSize == zoom_out)
                 {
-                    StartCoroutine(highlight(1080, 720));
+                    StartCoroutine(highlight(zoom_out, zoom_in));
                     foreach (Vector2 item in task)
                     {
                         StartCoroutine(UI_Spawn.set_activate_overlay(item));
@@ -78,11 +84,11 @@ public class zoom : MonoBehaviour
                 else
                 {
                     StartCoroutine(UI_Spawn.set_activate_overlay());
-                    StartCoroutine(highlight(720, 1080));
+                    StartCoroutine(highlight(zoom_in, zoom_out));
                 }
             }
-            
-            
+
+
         }
     }
 
@@ -93,7 +99,7 @@ public class zoom : MonoBehaviour
         int height = (int) gameObject.GetComponent<Spawn_Grid>().Get_Dimension_Grid().y;
 
         // Debug.Log(math.floor((coordinate.x + dimension.x / 2) / dimension.x ));
-        // Debug.Log(math.floor((coordinate.y + dimension.y / 2) / dimension.y ));
+         // Debug.Log(math.floor((coordinate.y + dimension.y / 2) / dimension.y ));
 
         int x = (int)math.floor((coordinate.x + dimension.x / 2) / dimension.x);
         int y = (int)math.floor((coordinate.y + dimension.y / 2) / dimension.y);
@@ -132,7 +138,7 @@ public class zoom : MonoBehaviour
     //     new_grid.transform.position = new Vector3(  dimension.x * coordinate.x + gap * coordinate.x,
     //                                                 dimension.y * coordinate.x + gap * coordinate.y,
     //                                                 Selected_Overlay.transform.position.x);
-        
+
     //     // Selected_Overlay.transform.position     = new Vector3(  math.floor((coordinate.x + dimension.x / 2) / dimension.x ) * ( dimension.x + gap),
     //     //                                                         math.floor((coordinate.y + dimension.y / 2) / dimension.y ) * ( dimension.y + gap),
     //     //                                                         -5);
@@ -154,6 +160,11 @@ public class zoom : MonoBehaviour
         on_animate = true;
         float elapsedTime = 0f;
 
+        if (startSize == zoom_in)
+        {
+            tooggle_text_input(false);
+        }
+
         while (elapsedTime < duration)
         {
             // Calculate interpolation factor (0 to 1)
@@ -171,6 +182,12 @@ public class zoom : MonoBehaviour
 
         // Ensure exact final value
         cam.orthographicSize = endSize;
+
+        if (endSize == zoom_in)
+        {
+            tooggle_text_input(true);
+        }
+
         on_animate = false;
     }
 }
