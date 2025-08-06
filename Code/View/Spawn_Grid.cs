@@ -21,7 +21,7 @@ public class Spawn_Grid : MonoBehaviour
     [SerializeField] private GameObject Selected_Overlay;
     List<GameObject> Overlay_Container;
 
-
+    // UI Handler variable
     private UI_Handler UI;
 
 
@@ -32,23 +32,29 @@ public class Spawn_Grid : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        // Grid obj inisialisasi
+        // UI Handler Get Component
+        // Overlay Container inisialisasi 
         Grid_Obj = new List<GameObject>();
         UI = gameObject.GetComponent<UI_Handler>();
         Overlay_Container = new List<GameObject>();
 
+        // Get dimension dari Referensi Grid
         dimension = new Vector2(Grid_Reference.GetComponent<MeshRenderer>().bounds.size.x,
                                 Grid_Reference.GetComponent<MeshRenderer>().bounds.size.y);
 
-        // Loop untuk spawn grid pertama
+        // Loop untuk spawn grid pertama, contoh :
+        // 3,-1 | 3, 0 | 3,1
+        // 2,-1 | 2, 0 | 2,1
+        // 1,-1 | 1, 0 | 1,1
 
         for (int i = grid_height; i > 0; i--)
         {
-            for (int j = grid_length; j > 0; j--)
+            for (int j = 0; j < grid_length; j++)
             {
-                // Debug.Log(j - grid_length / 2 + " " + i);
-                spawn_grid(Grid_Reference, j - grid_length / 2 - 1, i - 1);
-
+                // Debug.Log(j - grid_length / 2 - 1 + " " + ( i - 1 ));
+                spawn_grid(Grid_Reference, j - grid_length / 2, i - 1);
+                
             }
         }
 
@@ -74,6 +80,11 @@ public class Spawn_Grid : MonoBehaviour
 
     public void set_activate_grid(List<bool> activated)
     {
+        // Cek grid yang diaktifkan
+        // foreach (var item in activated)
+        // {
+        //     print(item);
+        // }
 
         for (int i = 0; i < activated.Count; i++)
         {
@@ -91,8 +102,11 @@ public class Spawn_Grid : MonoBehaviour
 
     public IEnumerator set_activate_overlay( Vector2 coordinate )
     {
-        float x = grid_length - coordinate.x - grid_length / 2 - 1;
+
+        float x = coordinate.x - grid_length / 2 ;
         float y = grid_height - coordinate.y - 1 ;
+
+        // Debug.Log(x);
 
         // spawn new grid
         GameObject new_grid = Instantiate(Selected_Overlay);
@@ -115,6 +129,7 @@ public class Spawn_Grid : MonoBehaviour
 
     public IEnumerator set_activate_overlay()
     {
+        // Overlay 
         while (Overlay_Container.Count > 0)
         {
             GameObject item = Overlay_Container[0];
@@ -130,8 +145,12 @@ public class Spawn_Grid : MonoBehaviour
 
     }
 
-    void spawn_grid(GameObject reference, int x, int y)
-    {   
+    private void spawn_grid(GameObject reference, float x, float y)
+    {
+
+        // Debug.Log("Koordinat Spawn : " + x + " , " + y);
+
+        // Spawn Grid dengan referensi
         GameObject new_grid = Instantiate(reference);
         new_grid.transform.SetParent(reference.transform.parent);
         new_grid.transform.position = new Vector3(  dimension.x * x + gap * x,

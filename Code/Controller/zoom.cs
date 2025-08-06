@@ -54,11 +54,10 @@ public class zoom : MonoBehaviour
         Vector2 touchPosition = ctx.ReadValue<Vector2>();
         Vector2 worldPosition = cam.ScreenToWorldPoint(new Vector2(touchPosition.x, touchPosition.y));
 
-        if (ctx.phase == InputActionPhase.Started)
-        {
-            //Debug.Log("World Position: " + worldPosition);
-
-        }
+        // if (ctx.phase == InputActionPhase.Started)
+        // {
+        //     Debug.Log("World Position: " + worldPosition);
+        // }
 
         // Debug.Log(ctx.ReadValue<Vector2>());
         // Debug.Log(ctx.phase);
@@ -73,8 +72,10 @@ public class zoom : MonoBehaviour
                 if (cam.orthographicSize == zoom_out)
                 {
                     StartCoroutine(highlight(zoom_out, zoom_in));
+
                     foreach (Vector2 item in task)
                     {
+                        Debug.Log(item);
                         StartCoroutine(UI_Spawn.set_activate_overlay(item));
                     }
 
@@ -88,7 +89,6 @@ public class zoom : MonoBehaviour
                 }
             }
 
-
         }
     }
 
@@ -98,20 +98,23 @@ public class zoom : MonoBehaviour
         int width = (int) gameObject.GetComponent<Spawn_Grid>().Get_Dimension_Grid().x;
         int height = (int) gameObject.GetComponent<Spawn_Grid>().Get_Dimension_Grid().y;
 
+        // Debug.Log(width + " " + height);
+
         // Debug.Log(math.floor((coordinate.x + dimension.x / 2) / dimension.x ));
-         // Debug.Log(math.floor((coordinate.y + dimension.y / 2) / dimension.y ));
+        // Debug.Log(math.floor((coordinate.y + dimension.y / 2) / dimension.y ));
 
         int x = (int)math.floor((coordinate.x + dimension.x / 2) / dimension.x);
         int y = (int)math.floor((coordinate.y + dimension.y / 2) / dimension.y);
 
-        // Debug.Log( math.abs(x - width) - ( width - width/2));
-        int newX = math.abs(x - width) - (width - width / 2);
+        // Debug.Log( x);
+        // int newX = math.abs(x - width) - ( width - width / 2);
+        int newX = x + width/2;
         int newY = math.abs(y - height) - 1;
 
-        if (width % 2 == 0)
-        {
-            newX -= 1;
-        }
+        // if (width % 2 == 0)
+        // {
+        //     newX -= 1;
+        // }
 
         Data data = gameObject.GetComponent<Data>();
 

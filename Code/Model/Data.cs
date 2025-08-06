@@ -17,7 +17,7 @@ public class Data : MonoBehaviour
 
     private List<Data_Deret> Spawn_Data()
     {
-        Data_Deret x1 = new Data_Deret("KAU", true, 0, 0);
+        Data_Deret x1 = new Data_Deret("KA", true, 0, 0);
         Data_Deret y1 = new Data_Deret("KUA", false, 0, 0);
         Data_Deret x2 = new Data_Deret("AKU", true, 0, 2);
         return new List<Data_Deret> { x1, y1, x2 };
@@ -34,25 +34,33 @@ public class Data : MonoBehaviour
         {
             Vector2 Coordinate = item.Get_Render();
 
-            if (item.Get_Direction()) // Mendatar
+            // Mendatar
+            if (item.Get_Direction())
             {
                 for (int i = 0; i < item.String_Length(); i++)
                 {
-                    //Debug.Log(temp[(int)Coordinate.x + i + (int)Coordinate.y * length]);
+                    // Debug.Log((int)Coordinate.x + i + (int)Coordinate.y * length);
                     temp[(int)Coordinate.x + i + (int)Coordinate.y * length] = true;
                 }
 
             }
-
-            else // Menurun
+            
+            // Menurun
+            else
             {
                 for (int i = 0; i < item.String_Length(); i++)
                 {
-                    //Debug.Log((int)Coordinate.x + length * (i + (int)Coordinate.y));
+                    // Debug.Log((int)Coordinate.x + length * (i + (int)Coordinate.y));
                     temp[(int)Coordinate.x + length * (i + (int)Coordinate.y)] = true;
                 }
             }
         }
+
+        // Cek Hasil dari Temp 
+        // foreach (bool item in temp)
+        // {
+        //     Debug.Log(item);
+        // }
 
         return temp;
     }
@@ -71,7 +79,7 @@ public class Data : MonoBehaviour
     public List<Vector2> Searching_Grid( Vector2 coordinate)
     {
         List<Vector2> temp = null;
-        // Debug.Log(coordinate);
+        Debug.Log(coordinate);
 
         foreach (Data_Deret item in datas)
         {

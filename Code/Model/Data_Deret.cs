@@ -10,8 +10,7 @@ public class Data_Deret : MonoBehaviour
     private bool direction; // True untuk mendatar dan False untuk menurun
     private int x;          // Koordinat x dari data
     private int y;          // Koordinat y dari data
-
-    private bool clear;
+    private bool clear;     // variabel untuk mengetahui apakah kata sudah tertebak 
 
     public Data_Deret(string kata, bool direction, int x, int y)
     {
@@ -67,7 +66,7 @@ public class Data_Deret : MonoBehaviour
                 }
             }
         }
-
+ 
         if (found)
         {
             return temp;
