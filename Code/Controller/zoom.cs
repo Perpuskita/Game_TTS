@@ -75,7 +75,7 @@ public class zoom : MonoBehaviour
 
                     foreach (Vector2 item in task)
                     {
-                        Debug.Log(item);
+                        // Debug.Log(item);
                         StartCoroutine(UI_Spawn.set_activate_overlay(item));
                     }
 

@@ -8,6 +8,10 @@ using System.Linq;
 
 public class Data : MonoBehaviour
 {
+
+    // Penampung String
+    private string[] string_container;
+
     // Class container dari data deret
     private List<Data_Deret> datas;
     public Data()
@@ -15,8 +19,47 @@ public class Data : MonoBehaviour
         datas = Spawn_Data();
     }
 
+    void Awake()
+    {
+
+        int random = UnityEngine.Random.Range(1, 3);
+
+        TextAsset textAsset = Resources.Load<TextAsset>("Data_Database");
+        if (textAsset != null)
+        {
+            // string fileContent = textAsset.text;
+
+            string[] lines = textAsset.text.Split("\n");
+            int counter = 0;
+            string[] Pertanyaan = new string[5];
+            string[] Clue = new string[6];
+
+
+            for (int i = 0; i < lines.Count(); i++)
+            {
+                if (lines[i].Trim().Equals("//Start"))
+                {
+                    counter++;
+                }
+            }
+
+            // Debug.Log(counter);
+        }
+
+        else
+        {
+            Debug.LogError("File tidak ditemukan di folder Resources!");
+        }
+
+    }
+
     private List<Data_Deret> Spawn_Data()
     {
+        // datass.initialize();
+        // Spawn Data_Database
+
+        // Data_Database datass = new Data_Database(3, 3);
+
         Data_Deret x1 = new Data_Deret("KA", true, 0, 0);
         Data_Deret y1 = new Data_Deret("KUA", false, 0, 0);
         Data_Deret x2 = new Data_Deret("AKU", true, 0, 2);
@@ -44,7 +87,7 @@ public class Data : MonoBehaviour
                 }
 
             }
-            
+
             // Menurun
             else
             {
@@ -76,10 +119,10 @@ public class Data : MonoBehaviour
         return false;
     }
 
-    public List<Vector2> Searching_Grid( Vector2 coordinate)
+    public List<Vector2> Searching_Grid(Vector2 coordinate)
     {
         List<Vector2> temp = null;
-        Debug.Log(coordinate);
+        // Debug.Log(coordinate);
 
         foreach (Data_Deret item in datas)
         {
